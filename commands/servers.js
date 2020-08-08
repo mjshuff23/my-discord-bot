@@ -1,6 +1,7 @@
 module.exports = {
     name: 'servers',
     description: 'Displays servers on server side for me',
+    guildOnly: true,
     execute() {
         // List servers
         console.log(`Servers:`);

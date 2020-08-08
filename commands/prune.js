@@ -1,6 +1,8 @@
 module.exports = {
     name: 'prune',
     description: 'Deletes desired amount of previous chat lines',
+    args: true,
+    usage: '<1-99>',
     execute(message, args) {
         const amount = parseInt(args[0]) + 1;
 

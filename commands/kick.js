@@ -1,6 +1,7 @@
 module.exports = {
     name: 'kick',
     description: 'Kick mentioned user(s)',
+    guildOnly: true,
     execute(message) {
         const taggedUser = message.mentions.users.first();
         let mentionsSize = message.mentions.users.size;

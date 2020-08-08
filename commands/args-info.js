@@ -1,13 +1,13 @@
 module.exports = {
     name: 'args-info',
     description: 'Information about arguments provided',
-    execute(message, args, command, client) {
-        if (!args.length) {
-            return message.channel.send(`Cmon, ${message.author}, no arguments?`);
-        } else if (args[0] === 'foo') {
+    args: true,
+    usage: '<arg1> <arg2> <arg3> ...',
+    execute(message, args) {
+        if (args[0] === 'foo') {
             return message.channel.send('bar');
         }
         return message.channel.send(`# of Args: ${args.length}
-        Args: ${args}`);
+        Args: ${args.join(', ')}`);
     },
 };

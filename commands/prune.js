@@ -1,7 +1,7 @@
 module.exports = {
     name: 'prune',
     description: 'Deletes desired amount of previous chat lines',
-    execute(message, args, command, client) {
+    execute(message, args) {
         const amount = parseInt(args[0]) + 1;
 
         if (isNaN(amount)) {

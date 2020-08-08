@@ -1,7 +1,7 @@
 module.exports = {
     name: 'kick',
     description: 'Kick mentioned user(s)',
-    execute(message, args, command, client) {
+    execute(message) {
         const taggedUser = message.mentions.users.first();
         let mentionsSize = message.mentions.users.size;
         if (mentionsSize === 0) {

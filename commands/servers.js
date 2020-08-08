@@ -1,7 +1,7 @@
 module.exports = {
     name: 'servers',
     description: 'Displays servers on server side for me',
-    execute(message, args, command, client) {
+    execute() {
         // List servers
         console.log(`Servers:`);
         client.guilds.cache.forEach((guild) => {

@@ -26,13 +26,10 @@ client.on('message', message => {
     // Separate command name and arguments to pass it
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
-    // Report back when a command doesn't exist
-    if (!client.commands.has(commandName)) {
-        message.reply(`Oro, I don't think ${commandName} is something I can do!`);
-        return;
-    }
-    // Grab command out of commands Collection
-    const command = client.commands.get(commandName);
+
+    const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+
+    if (!command) return;
     // Check if command is server only
     if (command.guildOnly && message.channel.type !== 'text') {
         return message.reply(`I can't execute that command inside DMs!`);

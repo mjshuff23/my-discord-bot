@@ -3,6 +3,7 @@ module.exports = {
     description: 'Deletes desired amount of previous chat lines',
     args: true,
     usage: '<1-99>',
+    aliases: ['rm'],
     cooldown: 5,
     execute(message, args) {
         const amount = parseInt(args[0]) + 1;

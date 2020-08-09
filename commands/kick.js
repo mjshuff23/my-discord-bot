@@ -3,6 +3,7 @@ module.exports = {
     description: 'Kick mentioned user(s)',
     guildOnly: true,
     cooldown: 5,
+    aliases: ['boot', 'smash'],
     execute(message) {
         const taggedUser = message.mentions.users.first();
         let mentionsSize = message.mentions.users.size;

@@ -6,6 +6,10 @@ module.exports = {
     aliases: ['rm'],
     cooldown: 5,
     execute(message, args) {
+        // Make sure they're an administrator
+        if (message.member.roles.cache.has('HitokiriBattousai')) {
+            return message.reply(`You don't have a sufficient role privelage`);
+        }
         const amount = parseInt(args[0]) + 1;
 
         if (isNaN(amount)) {

@@ -12,11 +12,35 @@ for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
     client.commands.set(command.name, command);
 }
+
+
+function advertise() {
+    const mySite = new Discord.MessageEmbed()
+        .setColor('#0099ff')
+        .setTitle("Shuff's Domain")
+        .setURL('http://www.mikeshuff.com/')
+        .setAuthor('Michael Shuff', 'http://www.mikeshuff.com/images/shuff.png', 'http://www.mikeshuff.com')
+        .setDescription('You already know')
+        .setThumbnail('http://www.mikeshuff.com/images/shuff.png')
+        .addFields(
+            { name: 'My Web Site', value: 'Excelsior!' },
+            { name: '\u200B', value: '\u200B' },
+            { name: 'Goals:', value: 'Master JS', inline: true },
+            { name: 'Goals:', value: 'Graduate a/A', inline: true },
+        )
+        .addField('Goals:', 'Help the World', true)
+        .setImage('https://i.redd.it/4k6dnuykmna51.jpg')
+        .setTimestamp()
+        .setFooter('Patent Pending dont rob me mafucka', 'http://www.mikeshuff.com/images/shuff.png');
+
+    return mySite;
+}
 // Happens once at login
 client.once('ready', () => {
-    console.log("Connected as " + client.user.username);
     const homeChannel = client.channels.cache.get("733491269216763969");
+    console.log("Connected as " + client.user.username);
     homeChannel.send(`Kon'nichiwa sekai! I am ${client.user.username}!`);
+    homeChannel.send(advertise());
 });
 // Happens for every message happening in the server
 client.on('message', message => {

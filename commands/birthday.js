@@ -4,8 +4,8 @@ module.exports = {
     guildOnly: true,
     cooldown: 5,
     aliases: ['bday'],
-    execute(message, args, command, client) {
-        message.channel.send(`My birth date is ${client.user.createdAt}
+    execute(message) {
+        message.channel.send(`My birth date is ${message.client.user.createdAt}
 and the Server's birth date ${message.guild.createdAt}!`);
     },
 };

@@ -16,7 +16,7 @@ for (const file of commandFiles) {
 client.once('ready', () => {
     console.log("Connected as " + client.user.username);
     const homeChannel = client.channels.cache.get("733491269216763969");
-    // homeChannel.send(`Kon'nichiwa sekai! I am ${client.user.username}!`);
+    homeChannel.send(`Kon'nichiwa sekai! I am ${client.user.username}!`);
 });
 // Happens for every message happening in the server
 client.on('message', message => {
@@ -67,7 +67,7 @@ client.on('message', message => {
     }, cooldownAmount);
     // Execution time baby
     try {
-	    command.execute(message, args, command, client);
+	    command.execute(message, args);
     } catch (error) {
 	console.error(error);
 	message.reply('there was an error trying to execute that command!');

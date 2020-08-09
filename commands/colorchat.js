@@ -1,5 +1,5 @@
 module.exports = {
-    name: 'colorChat',
+    name: 'colorchat',
     description: 'ADMIN ONLY -- Colored logging of server chat in terminal',
     guildOnly: true,
     execute(message) {
@@ -30,7 +30,7 @@ module.exports = {
         let BgWhite = "\x1b[47m";
         // LOGGING CHAT IN VS CODE -- DO NOT DELETE THIS
         if (message.author.username === 'Himura Kenshin') {
-        console.log(FgRed, `${message.author.username}`, FgWhite, ` says '`, FgGreen, `${message.content}`, Reset, `'`);
+            console.log(FgRed, `${message.author.username}`, FgWhite, ` says '`, FgGreen, `${message.content}`, Reset, `'`);
         } else {
             console.log(FgWhite, `${message.author.username} says '`, FgGreen, `${message.content}`, Reset, `'`);
         }

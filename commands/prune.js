@@ -1,13 +1,14 @@
 module.exports = {
     name: 'prune',
-    description: 'Deletes desired amount of previous chat lines',
+    description: 'ADMIN ONLY -- Deletes desired amount of previous chat lines',
     args: true,
     usage: '<1-99>',
     aliases: ['rm'],
+    guildOnly: true,
     cooldown: 5,
     execute(message, args) {
         // Make sure they're an administrator - member.roles.cache.some(role => role.name === 'Mod');
-        if (message.author.id !== message.guild.ownerID) {
+        if (message.author.id !== message.channel.guild.ownerID) {
             return message.reply(`You don't have a sufficient role privelage`);
         }
         const amount = parseInt(args[0]) + 1;

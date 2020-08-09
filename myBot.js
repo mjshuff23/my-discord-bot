@@ -13,47 +13,53 @@ for (const file of commandFiles) {
     client.commands.set(command.name, command);
 }
 
-
-function advertise() {
-    const mySite = new Discord.MessageEmbed()
-        .setColor('#0099ff')
-        .setTitle("Shuff's Domain")
-        .setURL('http://www.mikeshuff.com/')
-        .setAuthor('Michael Shuff', 'http://www.mikeshuff.com/images/shuff.png', 'http://www.mikeshuff.com')
-        .setDescription('You already know')
-        .setThumbnail('http://www.mikeshuff.com/images/shuff.png')
-        .addFields(
-            { name: 'My Web Site', value: 'Excelsior!' },
-            { name: '\u200B', value: '\u200B' },
-            { name: 'Goals:', value: 'Master JS', inline: true },
-            { name: 'Goals:', value: 'Graduate a/A', inline: true },
-        )
-        .addField('Goals:', 'Help the World', true)
-        .setImage('https://i.redd.it/4k6dnuykmna51.jpg')
-        .setTimestamp()
-        .setFooter('Patent Pending dont rob me mafucka', 'http://www.mikeshuff.com/images/shuff.png');
-
-    return mySite;
-}
 // Happens once at login
 client.once('ready', () => {
     const homeChannel = client.channels.cache.get("733491269216763969");
     console.log("Connected as " + client.user.username);
     homeChannel.send(`Kon'nichiwa sekai! I am ${client.user.username}!`);
-    homeChannel.send(advertise());
 });
+
 // Happens for every message happening in the server
 client.on('message', message => {
-    // Logs color chat
-    client.commands.get('colorChat').execute(message);
-    if (!message.content.startsWith(prefix) || message.author.bot) return;
+    // Emojis for the BOYS
+    if (message.author.id === '711654464758480958') {
+        message.react('😤'); // - me first
+    } else if (message.author.id === '508405190446022679') {
+        message.react('🥃'); // - Mark
+    } else if (message.author.id === '732256817857691689') {
+        message.react('🎸'); // - Bryan
+    }
+
+    // Chat logging into terminal
+    client.commands.get('colorchat').execute(message);
+
+    // Test this out and see if this is still a good combo check and/or location for this
+    if (!message.content.startsWith(prefix) || message.author.bot) {
+        console.log('Returning at line 38');
+        return;
+    }
     // Separate command name and arguments to pass it
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
 
+    // Grab a command by it's name or it's aliases
     const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
     if (!command) return;
+        // Only server owner can use advertise, which sends embedded messages
+    if (commandName === 'advertise') {
+        if (message.author.id !== message.guild.ownerID) {
+            message.reply(`Sorry, only ${message.guild.owner} can use advertise`);
+        } else {
+            try {
+                command.execute(message, args); return;
+            } catch (error) {
+            console.error(error);
+            message.reply('there was an error trying to execute that command!');
+            }
+        }
+    }
     // Check if command is server only
     if (command.guildOnly && message.channel.type !== 'text') {
         return message.reply(`I can't execute that command inside DMs!`);
@@ -75,6 +81,7 @@ client.on('message', message => {
     const now = Date.now();
     const timestamps = cooldowns.get(command.name);
     const cooldownAmount = (command.cooldown || 3) * 1000;
+
     // Check if user has a cooldown on that command
     if (timestamps.has(message.author.id)) {
             const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
@@ -84,11 +91,13 @@ client.on('message', message => {
                 return message.reply(`Please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \'${command.name}\' command.`);
             }
     }
+
     // Set a timer to delete the cooldown timestamp when time is us
     timestamps.set(message.author.id, now);
     setTimeout(() => {
         timestamps.delete(message.author.id);
     }, cooldownAmount);
+
     // Execution time baby
     try {
 	    command.execute(message, args);
@@ -97,4 +106,5 @@ client.on('message', message => {
 	message.reply('there was an error trying to execute that command!');
     }
 });
-client.login(token);         // login to Discord with your app's token
+
+client.login(token);

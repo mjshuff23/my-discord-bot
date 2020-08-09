@@ -6,8 +6,8 @@ module.exports = {
     aliases: ['rm'],
     cooldown: 5,
     execute(message, args) {
-        // Make sure they're an administrator
-        if (message.member.roles.cache.has('HitokiriBattousai')) {
+        // Make sure they're an administrator - member.roles.cache.some(role => role.name === 'Mod');
+        if (message.author.id !== message.guild.ownerID) {
             return message.reply(`You don't have a sufficient role privelage`);
         }
         const amount = parseInt(args[0]) + 1;

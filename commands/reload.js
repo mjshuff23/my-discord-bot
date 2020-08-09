@@ -6,6 +6,9 @@ module.exports = {
     execute(message, args) {
         const commandName = args[0].toLowerCase();
         const command = message.client.commands.get(commandName) || message.client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+        if (message.author.id !== message.guild.ownerID) {
+            return message.reply(`You don't have a sufficient role privelage`);
+        }
 
         if (!command) {
             return message.channel.send(`There is no command with the name or alias \`${commandName}\`, ${message.author}!`);

@@ -1,6 +1,6 @@
 module.exports = {
     name: 'colorChat',
-    description: 'Colored logging of server chatter!',
+    description: 'ADMIN ONLY -- Colored logging of server chat in terminal',
     guildOnly: true,
     execute(message) {
         let Reset = "\x1b[0m";

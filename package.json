@@ -1,0 +1,25 @@
+{
+  "name": "my_discord_bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "myBot.js",
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "discord.js": "^12.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+      "goBot": "node ./myBot.js &",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mjshuff23/my-discord-bot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mjshuff23/my-discord-bot/issues"
+  },
+  "homepage": "https://github.com/mjshuff23/my-discord-bot#readme"
+}

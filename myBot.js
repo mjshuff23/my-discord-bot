@@ -13,39 +13,31 @@ for (let file of commandFiles) {
     client.commands.set(command.name, command);
 }
 
+
 // Happens once at login
 client.once('ready', () => {
-    console.log("Connected as " + client.user.username);
-    setInterval(checkTime, 1000);
-    client.channels.resolveID()
+    const kenshin = { id: '741521468550283384' }
+    let homeChan = client.channels.cache.get("733491269216763969");
+    let testChan = client.channels.cache.get("741711523059335168");
+    let augChan = client.channels.cache.get("734851759708831808");
+    // Announce successful login
+    testChan.send(`Hello channel #${homeChan.id}!! Where is ${homeChan.guild.owner}?`);
+
+    let startClock = setInterval(checkTime, 1000);
 });
 
 // Happens for every message happening in the server
 client.on('message', message => {
     // Emojis for the BOYS
-    if (message.author.id === '711654464758480958') {
-        message.react('😤'); // - me first
-    } else if (message.author.id === '508405190446022679') {
-        message.react('🥃'); // - Mark
-    } else if (message.author.id === '732256817857691689') {
-        message.react('🎸'); // - Bryan
-    } else if (message.author.id === '725078271405981708') {
-        message.react('🥔');
-    } else if (message.author.id === '556353127607959583') {
-        message.react('🤖');
-    } else if (message.author.id === '741521468550283384') {
-        message.react('742863915523768331')
-    }
-    // Test this out and see if this is still a good combo check and/or location for this
+    client.commands.get('emojicheck').execute(message);
+    // Chat logging into terminal any non prefixed chat
     if (!message.content.startsWith(prefix) || message.author.bot) {
-        // Chat logging into terminal
         client.commands.get('colorchat').execute(message);
         return;
     }
     // Separate command name and arguments to pass it
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
-
     // Grab a command by it's name or it's aliases
     const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
@@ -113,26 +105,27 @@ client.on('message', message => {
 client.login(token)
 // Daily Report and Lunch
 function checkTime() {
-    const homeChannel = client.channels.cache.get("733491269216763969");
+    let homeChan = client.channels.cache.get("733491269216763969");
+    let testChan = client.channels.cache.get("741711523059335168");
+    let augChan = client.channels.cache.get("734851759708831808");
     const timeNow = new Date();
     const seconds = timeNow.getSeconds();
     const minutes = timeNow.getMinutes();
     const hours = timeNow.getHours();
     if (hours === 10 && minutes === 50 && seconds === 00) {
-        homeChannel.send("Don't forget your reports!");
-        client.channels.cache.get('734851759708831805').send('Dont forget your reports!');
+        homeChan.send("Don't forget your reports!");
+        augChan.send("Don't forget your reports!");
     }
     if (hours === 20 && minutes === 30 && seconds === 0) {
-        homeChannel.send("Don't forget your reports!");
+        homeChan.send("Don't forget your reports!");
+        augChan.send("Don't forget your reports!");
     }
     if (hours === 14 && minutes === 15 && seconds === 0) {
-        homeChannel.send("Lunch time!");
+        homeChan.send("Lunch time!");
+        augChan.send("Lunch time!");
     }
     if (hours === 17 && minutes === 45 && seconds === 0) {
-        homeChannel.send("Break time!");
+        homeChan.send("Break time!");
+        augChan.send("Break time!");
     }
-    // if (hours === 22 && minutes === 03 && seconds === 15){
-    // client.guilds.cache.forEach(guild => {
-    //     client.users.cache.get(guild.ownerID).send("Important announcement!");
-    // });}
 }

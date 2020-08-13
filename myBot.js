@@ -8,16 +8,16 @@ const cooldowns = new Discord.Collection();
 // Read commands directory and add js files to variable
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 // Import each command file and set them as well
-for (const file of commandFiles) {
+for (let file of commandFiles) {
     const command = require(`./commands/${file}`);
     client.commands.set(command.name, command);
 }
 
 // Happens once at login
 client.once('ready', () => {
-    const homeChannel = client.channels.cache.get("733491269216763969");
     console.log("Connected as " + client.user.username);
-    homeChannel.send(`Kon'nichiwa sekai! I am ${client.user.username}!`);
+    setInterval(checkTime, 1000);
+    client.channels.resolveID()
 });
 
 // Happens for every message happening in the server
@@ -29,14 +29,17 @@ client.on('message', message => {
         message.react('🥃'); // - Mark
     } else if (message.author.id === '732256817857691689') {
         message.react('🎸'); // - Bryan
+    } else if (message.author.id === '725078271405981708') {
+        message.react('🥔');
+    } else if (message.author.id === '556353127607959583') {
+        message.react('🤖');
+    } else if (message.author.id === '741521468550283384') {
+        message.react('742863915523768331')
     }
-
-    // Chat logging into terminal
-    client.commands.get('colorchat').execute(message);
-
     // Test this out and see if this is still a good combo check and/or location for this
     if (!message.content.startsWith(prefix) || message.author.bot) {
-        console.log('Returning at line 38');
+        // Chat logging into terminal
+        client.commands.get('colorchat').execute(message);
         return;
     }
     // Separate command name and arguments to pass it
@@ -107,4 +110,29 @@ client.on('message', message => {
     }
 });
 
-client.login(token);
+client.login(token)
+// Daily Report and Lunch
+function checkTime() {
+    const homeChannel = client.channels.cache.get("733491269216763969");
+    const timeNow = new Date();
+    const seconds = timeNow.getSeconds();
+    const minutes = timeNow.getMinutes();
+    const hours = timeNow.getHours();
+    if (hours === 10 && minutes === 50 && seconds === 00) {
+        homeChannel.send("Don't forget your reports!");
+        client.channels.cache.get('734851759708831805').send('Dont forget your reports!');
+    }
+    if (hours === 20 && minutes === 30 && seconds === 0) {
+        homeChannel.send("Don't forget your reports!");
+    }
+    if (hours === 14 && minutes === 15 && seconds === 0) {
+        homeChannel.send("Lunch time!");
+    }
+    if (hours === 17 && minutes === 45 && seconds === 0) {
+        homeChannel.send("Break time!");
+    }
+    // if (hours === 22 && minutes === 03 && seconds === 15){
+    // client.guilds.cache.forEach(guild => {
+    //     client.users.cache.get(guild.ownerID).send("Important announcement!");
+    // });}
+}

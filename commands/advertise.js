@@ -24,6 +24,7 @@ module.exports = {
         .setTimestamp()
         .setFooter('Patent Pending dont rob me mafucka', 'http://www.mikeshuff.com/images/shuff.png');
 
-        return message.reply(mySite);
+        const { client }  = require('../myBot.js');
+        return client.channels.cache.get('733491269216763969').send(mySite);
     }
 };

@@ -9,11 +9,14 @@ const cooldowns = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 // Import each command file and set them as well
 for (let file of commandFiles) {
+    console.log(`loading ${file}`);
     const command = require(`./commands/${file}`);
     client.commands.set(command.name, command);
 }
 
-
+module.exports = {
+    client: client,
+}
 // Happens once at login
 client.once('ready', () => {
     const kenshin = { id: '741521468550283384' }
@@ -22,7 +25,7 @@ client.once('ready', () => {
     let augChan = client.channels.cache.get("734851759708831808");
     // Announce successful login
     testChan.send(`Hello channel #${homeChan.id}!! Where is ${homeChan.guild.owner}?`);
-
+    // Starts a timer clock for alarms on reports and breaks
     let startClock = setInterval(checkTime, 1000);
 });
 
@@ -40,12 +43,15 @@ client.on('message', message => {
     const commandName = args.shift().toLowerCase();
     // Grab a command by it's name or it's aliases
     const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
-
-    if (!command) return;
-        // Only server owner can use advertise, which sends embedded messages
+    // If the command wasn't found, let's inform them.
+    if (!command){
+        message.reply(`Orooooo.....!${commandName} is not a valid command and has no aliases.`);
+        return;
+    }
+    // Only I can use advertise, which sends embedded messages
     if (commandName === 'advertise') {
-        if (message.author.id !== message.guild.ownerID) {
-            message.reply(`Sorry, only ${message.guild.owner} can use advertise`);
+        if (message.author.id !== '711654464758480958') {
+            message.reply(`Sorry, only Yokito can use advertise right now, otherwise it bugs out.`);
         } else {
             try {
                 command.execute(message, args); return;

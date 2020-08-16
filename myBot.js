@@ -77,7 +77,7 @@ function isYokito(message) {
         return true;
     }
 }
-
+// 60 lines of code for a function is too much, having issues refactoring successfully.
 function commandRun(command, message, args) {
     if (!command) {
         message.reply(`Orooooo.....!${commandName} is not a valid command and has no aliases.`);

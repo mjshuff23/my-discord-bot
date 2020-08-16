@@ -1,3 +1,5 @@
+const { GuildMember } = require('discord.js');
+
 module.exports = {
     name: 'sendmessage',
     description: 'Sends message to desired channel',
@@ -6,7 +8,7 @@ module.exports = {
     aliases: ['message', 'msg'],
     args: true,
     usage: '<channel> <message>',
-    execute (_, args) {
+    execute (msg, args) {
         const { client }  = require('../myBot.js');
         // If it's not an array yet
         if (!Array.isArray(args)) {

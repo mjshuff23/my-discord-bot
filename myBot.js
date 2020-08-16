@@ -19,10 +19,12 @@ for (let file of commandFiles) {
 client.once('ready', () => {
     let homeChan = client.channels.cache.get("733491269216763969");
     let sendmessage = client.commands.get('sendmessage');
+    // I use sendmessage in two places, so here we have to pass it null.
     sendmessage.execute(null, `test Hello channel #${homeChan.id}!! Where is my homie ${homeChan.guild.owner}?`);
 
     let alarmClock = setInterval(checkTime, 1000);
 });
+
 
 client.on('message', message => {
 
@@ -38,7 +40,45 @@ client.on('message', message => {
 
     const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
+    commandRun(command, message, args);
 
+
+});
+
+client.login(token)
+
+function checkTime() {
+    const timeNow = new Date(),
+          seconds = timeNow.getSeconds(),
+          minutes = timeNow.getMinutes(),
+          hours = timeNow.getHours();
+
+    if (hours === 10 && minutes === 50 && seconds === 0) {
+        sendmessage(null, "home Don't forget your reports!");
+        sendmessage(null, "arg Don't forget your reports!");
+    } else if (hours === 20 && minutes === 30 && seconds === 0) {
+        sendmessage(null, "home Don't forget your reports!");
+        sendmessage(null, "aug Don't forget your reports!");
+    } else if (hours === 14 && minutes === 15 && seconds === 0) {
+        sendmessage(null, "home Lunch Time!");
+        sendmessage(null, "aug Lunch Time!");
+    } else if (hours === 17 && minutes === 45 && seconds === 0) {
+        sendmessage(null, "home Break time!");
+        sendmessage(null, "aug Break time!");
+    }
+}
+
+function isYokito(message) {
+    if (message.author.id !== '711654464758480958') {
+        message.reply(`Sorry, ${message.author} only Yokito can use this command.`);
+        return false;
+    } else {
+        console.log(`${message.author} is Yokito`);
+        return true;
+    }
+}
+
+function commandRun(command, message, args) {
     if (!command) {
         message.reply(`Orooooo.....!${commandName} is not a valid command and has no aliases.`);
         return;
@@ -92,43 +132,10 @@ client.on('message', message => {
     }, cooldownAmount);
 
     try {
-	    command.execute(message, args);
+        command.execute(message, args);
     } catch (error) {
-	    console.error(error);
-	    message.reply('there was an error trying to execute that command!');
-    }
-});
-
-client.login(token)
-
-function checkTime() {
-    const timeNow = new Date(),
-          seconds = timeNow.getSeconds(),
-          minutes = timeNow.getMinutes(),
-          hours = timeNow.getHours();
-
-    if (hours === 10 && minutes === 50 && seconds === 0) {
-        sendmessage(null, "home Don't forget your reports!");
-        sendmessage(null, "arg Don't forget your reports!");
-    } else if (hours === 20 && minutes === 30 && seconds === 0) {
-        sendmessage(null, "home Don't forget your reports!");
-        sendmessage(null, "aug Don't forget your reports!");
-    } else if (hours === 14 && minutes === 15 && seconds === 0) {
-        sendmessage(null, "home Lunch Time!");
-        sendmessage(null, "aug Lunch Time!");
-    } else if (hours === 17 && minutes === 45 && seconds === 0) {
-        sendmessage(null, "home Break time!");
-        sendmessage(null, "aug Break time!");
-    }
-}
-
-function isYokito(message) {
-    if (message.author.id !== '711654464758480958') {
-        message.reply(`Sorry, ${message.author} only Yokito can use this command.`);
-        return false;
-    } else {
-        console.log(`${message.author} is Yokito`);
-        return true;
+        console.error(error);
+        message.reply('there was an error trying to execute that command!');
     }
 }
 

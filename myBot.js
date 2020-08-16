@@ -15,6 +15,7 @@ for (let file of commandFiles) {
     client.commands.set(command.name, command);
 }
 /**************************************************************************************/
+
 // Happens once at login
 client.once('ready', () => {
     // Grab home channel id
@@ -139,36 +140,6 @@ function checkTime() {
     }
 }
 
-// Send a message to desired channel
-// function sendmessage(msgChan, message) {
-//     // Not sure why, but since we have to redeclare these in multiple scopes even
-//     //  if we define them in the global scope, let's try just having a function,
-//     // //   possibly even a Class when I get better
-//     let homeChan = client.channels.cache.get("733491269216763969"); // My server, #home
-//     let testChan = client.channels.cache.get("741711523059335168"); // ^#battousai-testing
-//     let augChan = client.channels.cache.get("734851759708831808");  // August Cohort main
-
-//     // I am sure there's a better way than this if statement, but idk it yet.
-//     switch(msgChan) {
-//         case 'home':
-//         case 'Home':
-//             homeChan.send(message);
-//             break;
-//         case 'test':
-//         case 'Test':
-//             testChan.send(message);
-//             break;
-//         case 'aug':
-//         case 'Aug':
-//             augChan.send(message);
-//             break;
-//         default:
-//             homeChan.send(message);
-//             break;
-//     }
-// }
-
-// Check if it's me
 function isYokito(message) {
     if (message.author.id !== '711654464758480958') {
         message.reply(`Sorry, ${message.author} only Yokito can use this command.`);

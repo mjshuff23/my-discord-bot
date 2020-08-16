@@ -1,3 +1,4 @@
+/*******************************FILE IMPORTS*****************************************/
 const fs = require('fs');   // Import File System module
 const Discord = require('discord.js');    // Import discord.js12
 const { prefix, token }  = require('./config.json'); // destructure elements from config
@@ -13,18 +14,14 @@ for (let file of commandFiles) {
     const command = require(`./commands/${file}`);
     client.commands.set(command.name, command);
 }
-
-module.exports = {
-    client: client,
-}
+/**************************************************************************************/
 // Happens once at login
 client.once('ready', () => {
-    const kenshin = { id: '741521468550283384' }
+    // Grab home channel id
     let homeChan = client.channels.cache.get("733491269216763969");
-    let testChan = client.channels.cache.get("741711523059335168");
-    let augChan = client.channels.cache.get("734851759708831808");
     // Announce successful login
-    testChan.send(`Hello channel #${homeChan.id}!! Where is ${homeChan.guild.owner}?`);
+    let sendmessage = client.commands.get('sendmessage');
+    sendmessage.execute(null, `test Hello channel #${homeChan.id}!! Where is my homie ${homeChan.guild.owner}?`);
     // Starts a timer clock for alarms on reports and breaks
     let startClock = setInterval(checkTime, 1000);
 });
@@ -33,38 +30,47 @@ client.once('ready', () => {
 client.on('message', message => {
     // Emojis for the BOYS
     client.commands.get('emojicheck').execute(message);
+
     // Chat logging into terminal any non prefixed chat
+    // Change the || to && if you want to remove bot chat
     if (!message.content.startsWith(prefix) || message.author.bot) {
         client.commands.get('colorchat').execute(message);
         return;
     }
-    // Separate command name and arguments to pass it
+
+    // Separate command name and arguments to pass it, regardless
+    //  of amount of whitespace between arguments
+    // Ask TA for explanation
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
+
     // Grab a command by it's name or it's aliases
     const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+
     // If the command wasn't found, let's inform them.
     if (!command){
         message.reply(`Orooooo.....!${commandName} is not a valid command and has no aliases.`);
         return;
     }
-    // Only I can use advertise, which sends embedded messages
-    if (commandName === 'advertise') {
-        if (message.author.id !== '711654464758480958') {
-            message.reply(`Sorry, only Yokito can use advertise right now, otherwise it bugs out.`);
-        } else {
+
+    if (command === 'advertise') {
+        // Only I can use advertise, which sends embedded messages, bc idk them yet
+        if (isYokito(message)) {
             try {
                 command.execute(message, args); return;
             } catch (error) {
             console.error(error);
-            message.reply('there was an error trying to execute that command!');
+            message.reply(`there was an error trying to execute ${commandName}!`);
             }
         }
+        return;
     }
+
     // Check if command is server only
     if (command.guildOnly && message.channel.type !== 'text') {
         return message.reply(`I can't execute that command inside DMs!`);
     }
+
     // Check if correct arguments are provided
     if (command.args && !args.length) {
         let reply = `You didn't provide the correct arguments, ${message.author}!`;
@@ -74,10 +80,12 @@ client.on('message', message => {
         }
         return message.channel.send(reply);
     }
+
     // Check if the command has cooldown set, if not, set one
     if (!cooldowns.has(command.name)) {
         cooldowns.set(command.name, new Discord.Collection());
     }
+
     // Set variables to measure cooldown, set cooldown to 3s if not provided
     const now = Date.now();
     const timestamps = cooldowns.get(command.name);
@@ -86,7 +94,6 @@ client.on('message', message => {
     // Check if user has a cooldown on that command
     if (timestamps.has(message.author.id)) {
             const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
-
             if (now <  expirationTime) {
                 const timeLeft = (expirationTime - now) / 1000;
                 return message.reply(`Please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \'${command.name}\' command.`);
@@ -103,35 +110,75 @@ client.on('message', message => {
     try {
 	    command.execute(message, args);
     } catch (error) {
-	console.error(error);
-	message.reply('there was an error trying to execute that command!');
+	    console.error(error);
+	    message.reply('there was an error trying to execute that command!');
     }
 });
 
 client.login(token)
 // Daily Report and Lunch
 function checkTime() {
-    let homeChan = client.channels.cache.get("733491269216763969");
-    let testChan = client.channels.cache.get("741711523059335168");
-    let augChan = client.channels.cache.get("734851759708831808");
-    const timeNow = new Date();
-    const seconds = timeNow.getSeconds();
-    const minutes = timeNow.getMinutes();
-    const hours = timeNow.getHours();
-    if (hours === 10 && minutes === 50 && seconds === 00) {
-        homeChan.send("Don't forget your reports!");
-        augChan.send("Don't forget your reports!");
+    // Grab current time
+    const timeNow = new Date(),
+          seconds = timeNow.getSeconds(),
+          minutes = timeNow.getMinutes(),
+          hours = timeNow.getHours();
+    // Check for multiple alarms
+    if (hours === 10 && minutes === 50 && seconds === 0) {
+        sendmessage(null, "home Don't forget your reports!");
+        sendmessage(null, "arg Don't forget your reports!");
+    } else if (hours === 20 && minutes === 30 && seconds === 0) {
+        sendmessage(null, "home Don't forget your reports!");
+        sendmessage(null, "aug Don't forget your reports!");
+    } else if (hours === 14 && minutes === 15 && seconds === 0) {
+        sendmessage(null, "home Lunch Time!");
+        sendmessage(null, "aug Lunch Time!");
+    } else if (hours === 17 && minutes === 45 && seconds === 0) {
+        sendmessage(null, "home Break time!");
+        sendmessage(null, "aug Break time!");
     }
-    if (hours === 20 && minutes === 30 && seconds === 0) {
-        homeChan.send("Don't forget your reports!");
-        augChan.send("Don't forget your reports!");
+}
+
+// Send a message to desired channel
+// function sendmessage(msgChan, message) {
+//     // Not sure why, but since we have to redeclare these in multiple scopes even
+//     //  if we define them in the global scope, let's try just having a function,
+//     // //   possibly even a Class when I get better
+//     let homeChan = client.channels.cache.get("733491269216763969"); // My server, #home
+//     let testChan = client.channels.cache.get("741711523059335168"); // ^#battousai-testing
+//     let augChan = client.channels.cache.get("734851759708831808");  // August Cohort main
+
+//     // I am sure there's a better way than this if statement, but idk it yet.
+//     switch(msgChan) {
+//         case 'home':
+//         case 'Home':
+//             homeChan.send(message);
+//             break;
+//         case 'test':
+//         case 'Test':
+//             testChan.send(message);
+//             break;
+//         case 'aug':
+//         case 'Aug':
+//             augChan.send(message);
+//             break;
+//         default:
+//             homeChan.send(message);
+//             break;
+//     }
+// }
+
+// Check if it's me
+function isYokito(message) {
+    if (message.author.id !== '711654464758480958') {
+        message.reply(`Sorry, ${message.author} only Yokito can use this command.`);
+        return false;
+    } else {
+        console.log(`${message.author} is Yokito`);
+        return true;
     }
-    if (hours === 14 && minutes === 15 && seconds === 0) {
-        homeChan.send("Lunch time!");
-        augChan.send("Lunch time!");
-    }
-    if (hours === 17 && minutes === 45 && seconds === 0) {
-        homeChan.send("Break time!");
-        augChan.send("Break time!");
-    }
+}
+
+module.exports = {
+    client: client,
 }

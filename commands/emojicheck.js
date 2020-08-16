@@ -5,7 +5,7 @@ module.exports = {
     aliases: ['emoji', 'react'],
     execute(message) {
         if (message.author.id === '711654464758480958') {
-            // message.react('⚔️'); // - me first
+            message.react('⚔️'); // - me first
         } else if (message.author.id === '508405190446022679') {
             message.react('🥃'); // - Mark
         } else if (message.author.id === '732256817857691689') {

@@ -1,4 +1,3 @@
-/*******************************FILE IMPORTS*****************************************/
 const fs = require('fs');
 const Discord = require('discord.js');
 const { prefix, token }  = require('./config.json');
@@ -14,7 +13,8 @@ for (let file of commandFiles) {
     const command = require(`./commands/${file}`);
     client.commands.set(command.name, command);
 }
-/**************************************************************************************/
+
+
 
 client.once('ready', () => {
     let homeChan = client.channels.cache.get("733491269216763969");

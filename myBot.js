@@ -1,7 +1,7 @@
 /*******************************FILE IMPORTS*****************************************/
-const fs = require('fs');   // Import File System module
-const Discord = require('discord.js');    // Import discord.js12
-const { prefix, token }  = require('./config.json'); // destructure elements from config
+const fs = require('fs');                              // Import File System module
+const Discord = require('discord.js');                 // Import discord.js12
+const { prefix, token }  = require('./config.json');   // destructure elements from config
 // Initialize new clients and collections
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
@@ -18,11 +18,11 @@ for (let file of commandFiles) {
 
 // Happens once at login
 client.once('ready', () => {
-    // Grab home channel id
+    // Grab home channel ID and Announce successful login
     let homeChan = client.channels.cache.get("733491269216763969");
-    // Announce successful login
     let sendmessage = client.commands.get('sendmessage');
     sendmessage.execute(null, `test Hello channel #${homeChan.id}!! Where is my homie ${homeChan.guild.owner}?`);
+
     // Starts a timer clock for alarms on reports and breaks
     let startClock = setInterval(checkTime, 1000);
 });
@@ -39,8 +39,8 @@ client.on('message', message => {
         return;
     }
 
-    // Separate command name and arguments to pass it, regardless
-    //  of amount of whitespace between arguments
+    // Separate command name and arguments to pass it,
+    //  regardless of amount of whitespace between arguments
     // Ask TA for explanation
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
@@ -48,8 +48,8 @@ client.on('message', message => {
     // Grab a command by it's name or it's aliases
     const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
-    // If the command wasn't found, let's inform them.
-    if (!command){
+
+    if (!command) {                // If the command wasn't found, let's inform them.
         message.reply(`Orooooo.....!${commandName} is not a valid command and has no aliases.`);
         return;
     }
@@ -75,8 +75,7 @@ client.on('message', message => {
     // Check if correct arguments are provided
     if (command.args && !args.length) {
         let reply = `You didn't provide the correct arguments, ${message.author}!`;
-        // Provide correct usage to user
-        if (command.usage) {
+        if (command.usage) {   // Provide correct usage to user if we provided it in file
             reply += `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
         }
         return message.channel.send(reply);
@@ -116,7 +115,9 @@ client.on('message', message => {
     }
 });
 
+// This is required to login
 client.login(token)
+
 // Daily Report and Lunch
 function checkTime() {
     // Grab current time
@@ -124,6 +125,7 @@ function checkTime() {
           seconds = timeNow.getSeconds(),
           minutes = timeNow.getMinutes(),
           hours = timeNow.getHours();
+
     // Check for multiple alarms
     if (hours === 10 && minutes === 50 && seconds === 0) {
         sendmessage(null, "home Don't forget your reports!");

@@ -40,7 +40,7 @@ client.on('message', message => {
 
     const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
-    commandRun(command, message, args);
+    commandRun(command, message, args, commandName);
 
 
 });
@@ -53,18 +53,19 @@ function checkTime() {
           minutes = timeNow.getMinutes(),
           hours = timeNow.getHours();
 
+    let sendmessage = client.commands.get('sendmessage');
     if (hours === 10 && minutes === 50 && seconds === 0) {
-        sendmessage(null, "home Don't forget your reports!");
-        sendmessage(null, "arg Don't forget your reports!");
+        sendmessage.execute(null, "home Don't forget your reports!");
+        sendmessage.execute(null, "arg Don't forget your reports!");
     } else if (hours === 20 && minutes === 30 && seconds === 0) {
-        sendmessage(null, "home Don't forget your reports!");
-        sendmessage(null, "aug Don't forget your reports!");
+        sendmessage.execute(null, "home Don't forget your reports!");
+        sendmessage.execute(null, "aug Don't forget your reports!");
     } else if (hours === 14 && minutes === 15 && seconds === 0) {
-        sendmessage(null, "home Lunch Time!");
-        sendmessage(null, "aug Lunch Time!");
+        sendmessage.execute(null, "home Lunch Time!");
+        sendmessage.execute(null, "aug Lunch Time!");
     } else if (hours === 17 && minutes === 45 && seconds === 0) {
-        sendmessage(null, "home Break time!");
-        sendmessage(null, "aug Break time!");
+        sendmessage.execute(null, "home Break time!");
+        sendmessage.execute(null, "aug Break time!");
     }
 }
 
@@ -78,12 +79,13 @@ function isYokito(message) {
     }
 }
 // 60 lines of code for a function is too much, having issues refactoring successfully.
-function commandRun(command, message, args) {
+function commandRun(command, message, args, commandName) {
     if (!command) {
         message.reply(`Orooooo.....!${commandName} is not a valid command and has no aliases.`);
         return;
     }
 
+    client.commands.get('prune').execute(message, '1');
     if (command === 'advertise') {
         if (isYokito(message)) {
             try {
@@ -95,7 +97,6 @@ function commandRun(command, message, args) {
         }
         return;
     }
-
     if (command.guildOnly && message.channel.type !== 'text') {
         return message.reply(`I can't execute that command inside DMs!`);
     }

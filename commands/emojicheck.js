@@ -16,6 +16,8 @@ module.exports = {
             message.react('🤖'); // - Robot Dude
         } else if (message.author.id === '741521468550283384') {
             // message.react('742863915523768331') // Kenshin
+        } else if (message.author.id === '339143759600025602') {
+            message.react('🦌')
         }
     },
 };
